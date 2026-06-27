@@ -1,0 +1,57 @@
+name: Semgrep
+
+# Semgrep SAST. Runs the OSS rule packs (no SEMGREP_APP_TOKEN required),
+# uploads findings to GitHub code scanning, and fails the job on findings so
+# it acts as a real PR gate rather than an advisory report.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 4 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    name: Semgrep SAST
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    # Dependabot lacks access to the repository secrets/permissions needed for
+    # SARIF upload; skip rather than fail noisily on its automated PRs.
+    if: github.actor != 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Semgrep
+        run: pip install --no-cache-dir semgrep
+
+      - name: Run Semgrep scan
+        # --error makes findings fail the step; the SARIF upload still runs via
+        # `if: always()` so results land in code scanning either way.
+        run: |
+          semgrep scan \
+            --config p/security-audit \
+            --config p/secrets \
+            --config p/owasp-top-ten \
+            --config p/javascript \
+            --config p/typescript \
+            --config p/react \
+            --sarif --output semgrep.sarif \
+            --error
+
+      - name: Upload Semgrep SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep

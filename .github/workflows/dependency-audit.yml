@@ -1,0 +1,38 @@
+name: Dependency audit
+
+# Severity-thresholded dependency vulnerability gate using the package manager's
+# own advisory feed. Complements OSV-Scanner (database-backed) and
+# dependency-review (PR-diff + licenses). Per CLAUDE.md §22 this blocks on
+# high/critical; lower severities are reported but do not fail the build.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    - cron: '42 5 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  pnpm-audit:
+    name: pnpm audit (high+)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Reads the pnpm version from package.json "packageManager"; do not also
+      # pass `version` here or the action errors with "multiple versions".
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Audit production + dev dependencies (high/critical only)
+        run: pnpm audit --audit-level high
+
+      - name: Report all advisories (non-blocking, full picture)
+        if: always()
+        run: pnpm audit || true

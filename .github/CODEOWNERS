@@ -1,0 +1,33 @@
+# TEMPO code owners.
+#
+# Owners are auto-requested for review on PRs that touch matching paths. With
+# branch protection's "Require review from Code Owners" enabled, these paths
+# cannot merge to `main` without an owner approval (see
+# security/policies/branch-protection.md).
+#
+# Order matters: the LAST matching pattern wins. Keep specific overrides below
+# the catch-all. Replace @BrainBurst59 with a team (e.g. @org/tempo-core) once
+# a GitHub org/team exists.
+
+# Catch-all: everything is owned unless a more specific rule overrides below.
+*                           @BrainBurst59
+
+# Security-, CI-, and supply-chain-sensitive surfaces.
+/.github/                   @BrainBurst59
+/security/                  @BrainBurst59
+/.github/workflows/         @BrainBurst59
+/.github/CODEOWNERS         @BrainBurst59
+/.github/dependabot.yml     @BrainBurst59
+
+# Engineering policy / agent instructions.
+/CLAUDE.md                  @BrainBurst59
+/AGENTS.md                  @BrainBurst59
+/PROJECT_INSTRUCTIONS.md    @BrainBurst59
+
+# Deterministic safety-critical business logic (verification, anti-cheat,
+# Today/Game rules). Changes here carry product-safety weight (CLAUDE.md §26).
+/packages/rules-engine/     @BrainBurst59
+/packages/contracts/        @BrainBurst59
+
+# Backend API and data model.
+/services/api/              @BrainBurst59
