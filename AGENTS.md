@@ -57,6 +57,7 @@ TEMPO is a fully loaded AI fitness super app with these core engines:
 - Avatar Engine: avatar selection, evolution, state, accessories, aura/ring unlocks, habit-based progression.
 - AI Coach Engine: structured explanation, progress recap, safety-aware coaching text, food-photo interpretation, form cues.
 - Wearables Engine: Apple Health/HealthKit, Apple Watch, Android Health Connect, and potentially Wear OS later.
+- Game Engine / Quest Engine: avatar progression, XP economy, quests, verification confidence, anti-cheat, opt-in/privacy-preserving leaderboards, asynchronous competitions, ghost rivals, stamina/recovery balancing, and cosmetic unlocks. It connects to Avatar, Today, Training, Fuel, Move, Wearables, Progress, and AI Coach. It is governed by one inviolable rule: fitness progress cannot be purchased, it must be earned. See §26 and `docs/product/game-engine-architecture.md`.
 
 Feature exploration rule: when evaluating any proposed capability, define the complete market-ready capability first. Do not recommend a lesser MVP version. Then define the engineering dependencies and milestones needed to implement it safely.
 
@@ -621,6 +622,41 @@ No YouTube ripping. No unlicensed screenshots. No competitor asset copying. No c
 - Provide skip/manual alternatives.
 - Avoid “injury prevention” claims unless legally/clinically reviewed.
 
+### Game Engine / Quest Engine
+
+The Game Engine is a launch product pillar, not a gimmick or a bolt-on gamification layer. It turns real, verified fitness behavior into avatar progression, XP, quests, asynchronous competition, ghost rivals, and cosmetic unlocks, and it integrates with Avatar, Today, Training, Fuel, Move, Wearables, Progress, and AI Coach.
+
+Prime rule:
+
+- Fitness progress cannot be purchased. It must be earned. Strength, endurance, mobility, fuel, recovery, technique, rhythm, XP toward verified progress, levels, and competitive standing come only from real, verified activity — never from money.
+
+Monetization rules:
+
+- Paid purchases may unlock cosmetic and visual items only: cosmetics, skins, aura effects, arena themes, companion animations, and other non-performance visual items.
+- Prohibited pay-to-win mechanics: paid strength, paid muscle, paid endurance, paid verified progress, paid XP that counts as real fitness progress, paid leaderboard advantage, permanent stat boosts, paid recovery overrides, paid stamina refills that confer competitive edge, or any mechanic that lets money substitute for real activity.
+- Cosmetic catalog items must be modeled as cosmetic-only and non-performance-affecting at the type level (see `@tempo/contracts` game contracts) so a purchasable item can never carry a stat or competitive effect.
+
+Verification and anti-cheat rules:
+
+- Competitive XP and competitive standing require workout verification. Classify every workout as `unverified`, `standard`, `high_confidence`, or `suspicious`.
+- Manual-only workouts can earn personal progress but only limited competitive XP.
+- `high_confidence` requires corroborating evidence such as wearable, workout-session, heart-rate, motion, or location signals where available.
+- `suspicious` workouts earn no competitive XP.
+- Verification and anti-cheat logic is deterministic, tested business logic in `packages/rules-engine/src/game/`, not freeform AI output. AI may explain or summarize, never adjudicate fairness or write economy state directly.
+
+Safety rules:
+
+- Game mechanics must never reward unsafe escalation. Under-fueled, poorly recovered, pain-flagged, or over-loaded states reduce competitive rewards and trigger safety handling, not bonuses.
+- More than two hard strength sessions in one day triggers diminishing returns or safety review unless strongly supported by corroborating signals.
+- Recovery activities still earn recovery XP. Recovery, rest, and de-load are never penalized.
+- Avatar progression must never punish missed days, injury, disability, recovery, or under-fueling.
+
+Privacy rules:
+
+- Game features may use sensitive fitness, health, location, and wearable signals only to benefit the user's own fitness experience (progression, verification, fairness, safety). Never for ads, behavioral profiling, creepy inference, manipulative monetization, data mining, or data sale.
+- Leaderboards and ghost rivals are opt-in or privacy-preserving by default. Public standings use pseudonymous handles, never raw identity, unless the user explicitly opts to reveal it.
+- No chat, comments, or open user-generated content is introduced by the Game Engine in its current scope.
+
 ## 27. Environment and Secrets
 
 Rules:
@@ -688,9 +724,10 @@ Required build sequence:
 13. AI Coach services: explanation generation, progress recaps, food-photo interpretation, conservative form cues, safety classifiers, prompt/version logging, and eval fixtures.
 14. Form Check: camera flow, consent, pose/computer-vision pipeline, training cues, privacy controls, quality indicators, and non-medical safety copy.
 15. Progress analytics: weekly/monthly summaries, body timeline, avatar evolution milestones, strength/nutrition/move/recovery trends, and retention loops.
-16. Subscriptions and entitlements: RevenueCat integration, paywalls, restore purchases, entitlement checks, app-store review notes, and server-side verification.
-17. Admin/content tooling: exercise management, video metadata, food-estimate review, feature flags, support tooling, audit trails, and moderation workflows.
-18. Full release hardening: on-device testing, accessibility, performance, security testing, privacy review, app-store metadata, screenshots, demo reviewer account, backend readiness, incident runbooks, and support docs.
+16. Game Engine / Quest Engine: deterministic XP economy, level and diminishing-returns curves, workout verification confidence, anti-cheat classification, quests, avatar progression integration, opt-in/privacy-preserving leaderboards, asynchronous competitions, ghost rivals, stamina/recovery balancing, and cosmetic-only unlocks. The earn-not-buy rule and the safety/anti-cheat boundaries are launch-blocking. This is a real product engine, not a stub.
+17. Subscriptions and entitlements: RevenueCat integration, paywalls, restore purchases, entitlement checks, app-store review notes, and server-side verification. Cosmetic-only monetization for the Game Engine; never sell fitness progress or competitive advantage.
+18. Admin/content tooling: exercise management, video metadata, food-estimate review, feature flags, support tooling, audit trails, and moderation workflows.
+19. Full release hardening: on-device testing, accessibility, performance, security testing, privacy review, app-store metadata, screenshots, demo reviewer account, backend readiness, incident runbooks, and support docs.
 
 Agents may ship internal pull requests in this sequence, but may not describe early slices as launch-ready unless they satisfy the market-ready acceptance criteria for their domain.
 

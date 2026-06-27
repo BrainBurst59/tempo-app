@@ -3,8 +3,11 @@ import { TempoStateSchema } from './tempo-state';
 import { FitnessGoalSchema } from './profile';
 
 export const FuelStatusSchema = z.enum(['under_target', 'on_target', 'over_target', 'unknown']);
+export type FuelStatus = z.infer<typeof FuelStatusSchema>;
 export const RecoveryStatusSchema = z.enum(['low', 'steady', 'high', 'unknown']);
+export type RecoveryStatus = z.infer<typeof RecoveryStatusSchema>;
 export const SorenessStatusSchema = z.enum(['none', 'mild', 'heavy', 'pain_flag']);
+export type SorenessStatus = z.infer<typeof SorenessStatusSchema>;
 export const WeatherOpportunitySchema = z.enum([
   'good_outdoor',
   'neutral',

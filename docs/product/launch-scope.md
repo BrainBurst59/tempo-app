@@ -12,7 +12,10 @@ Launch pillars:
 6. AI Coach Engine
 7. Wearables Engine
 8. Progress Engine
-9. Subscriptions and entitlements
-10. Privacy, consent, safety, account deletion, data export, and app-store readiness
+9. Game Engine / Quest Engine
+10. Subscriptions and entitlements
+11. Privacy, consent, safety, account deletion, data export, and app-store readiness
 
 Every feature must feed Today, Avatar, Progress, training, fuel, move, recovery, safety, or trust.
+
+The Game Engine is a first-class launch pillar governed by one inviolable rule: fitness progress cannot be purchased, it must be earned. Purchases unlock cosmetic/visual items only; pay-to-win is prohibited. See `docs/product/game-engine-architecture.md` and `docs/adr/0002-game-engine.md`.

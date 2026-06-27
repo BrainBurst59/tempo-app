@@ -5,3 +5,4 @@ export * from './privacy';
 export * from './profile';
 export * from './consent';
 export * from './identity';
+export * from './game';
