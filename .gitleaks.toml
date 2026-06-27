@@ -1,0 +1,35 @@
+# TEMPO Gitleaks configuration.
+#
+# Secret scanning is NOT weakened here. We extend Gitleaks' full default ruleset
+# (useDefault = true), so every built-in rule still runs across the entire
+# repository and its history.
+#
+# The single allowlist below clears exactly ONE immutable HISTORICAL false
+# positive and nothing else:
+#
+#   Commit: 5cd16155fddb8d5b8fe9a41a38ab1bbd3415ff79
+#   File:   apps/mobile/src/env.test.ts
+#   Value:  pk_test_abc123  (a fake Clerk *publishable* test key)
+#
+# Why this is a false positive, not a real secret:
+#   - Clerk publishable keys (pk_*) are public client identifiers, shipped in the
+#     app bundle by design — they are not credentials. The value is also fake.
+#   - HEAD no longer contains any key-shaped literal (the fixture is now built
+#     from a prefix constant), but the original value is immutable in git history
+#     at the commit above, so a full-history scan would otherwise fail forever.
+#
+# The allowlist requires the finding to match the exact commit AND the exact file
+# path AND the exact fixture value (condition = "AND"). It does NOT allowlist
+# Clerk patterns generally, does NOT allowlist all pk_/sk_ values, and does NOT
+# allowlist the path or commit on their own.
+title = "TEMPO Gitleaks config"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Historical fake Clerk publishable test key in env.test.ts (public-by-design, not a credential)."
+condition = "AND"
+commits = ["5cd16155fddb8d5b8fe9a41a38ab1bbd3415ff79"]
+paths = ['''apps/mobile/src/env\.test\.ts''']
+regexes = ['''pk_test_abc123''']
