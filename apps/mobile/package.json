@@ -13,7 +13,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@clerk/clerk-expo": "^2.19.0",
+    "@clerk/clerk-expo": "^2.19.36",
     "@expo/vector-icons": "^15.0.0",
     "@tempo/contracts": "workspace:*",
     "@tempo/rules-engine": "workspace:*",
@@ -34,6 +34,6 @@
   "devDependencies": {
     "@types/react": "^19.0.0",
     "typescript": "~6.0.3",
-    "vitest": "^2.1.0"
+    "vitest": "^3.2.6"
   }
 }

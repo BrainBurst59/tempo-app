@@ -1,0 +1,38 @@
+name: SBOM
+
+# Generates a CycloneDX Software Bill of Materials for the monorepo so every
+# build and release has an auditable dependency inventory (CLAUDE.md §19, §22).
+# Syft reads the committed pnpm-lock.yaml, so no install step is required.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  sbom:
+    name: Generate CycloneDX SBOM
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate SBOM (CycloneDX JSON)
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
+        with:
+          path: .
+          format: cyclonedx-json
+          output-file: tempo-sbom.cdx.json
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tempo-sbom-cyclonedx
+          path: tempo-sbom.cdx.json
+          if-no-files-found: error
+          retention-days: 90

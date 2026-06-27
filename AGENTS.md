@@ -1,6 +1,6 @@
 # TEMPO Coding Agent Engineering Instructions
 
-Version: 0.2  
+Version: 0.3  
 Audience: Claude Code, Cursor, Codex, and any AI-assisted coding agent working in this repository  
 Project: TEMPO, an avatar-led AI fitness super app for iOS, Android, Apple Watch, and web/admin surfaces
 Operating mode: Commercial launch product. Not MVP. Not prototype. Not proof of concept. Not demoware.
@@ -169,16 +169,19 @@ Every PR must include:
 
 AI agents must follow this workflow:
 
-1. Read relevant docs and existing code before editing.
-2. State a concise implementation plan before code changes when the task is nontrivial.
-3. Prefer adding tests before or alongside implementation.
-4. Make the smallest coherent change.
-5. Run or specify the exact checks that must pass.
-6. Self-review for security, privacy, app-store, accessibility, and performance issues.
-7. Do not claim a check passed unless it was actually run.
+1. Branch and open a PR for every nontrivial change. Cut a typed branch (`feature/`, `fix/`, `security/`, `chore/`, `docs/`, `refactor/`) from the latest `main`, never commit or push to `main` directly, and land the work through a reviewed pull request. See §33.
+2. Read relevant docs and existing code before editing.
+3. State a concise implementation plan before code changes when the task is nontrivial.
+4. Prefer adding tests before or alongside implementation.
+5. Make the smallest coherent change.
+6. Run or specify the exact checks that must pass.
+7. Self-review for security, privacy, app-store, accessibility, and performance issues.
+8. Do not claim a check passed unless it was actually run.
 
 AI agents must not:
 
+- Commit or push directly to `main`, force-push or delete `main`, or merge a PR that has not passed all required CI checks and CODEOWNERS review.
+- Bypass, disable, downgrade, or skip a required CI gate (lint, types, tests, secret scan, SAST, CodeQL, dependency review, dependency audit, OSV, SBOM) to make a task pass.
 - Replace working architecture with a simpler generated pattern.
 - Install packages without checking maintenance, license, security posture, and bundle impact.
 - Use `any`, `unknown` casts, disabled lint rules, or broad exception handling without written justification.
@@ -762,4 +765,23 @@ Use these as standing references when updating this file:
 - OWASP Mobile Application Security project: https://owasp.org/www-project-mobile-app-security/
 - OWASP API Security Top 10 2023: https://owasp.org/API-Security/editions/2023/en/0x11-t10/
 - NIST SP 800-218 Secure Software Development Framework: https://doi.org/10.6028/NIST.SP.800-218
+
+## 33. Branching and Pull Request Workflow
+
+All nontrivial work happens on a typed branch and merges to `main` only through a reviewed pull request that passes every required CI gate. Direct commits and direct pushes to `main` are not allowed — for humans or for AI coding agents. `main` is protected; see `security/policies/branch-protection.md`.
+
+Rules:
+
+- Never commit or push directly to `main`. Never force-push or delete `main`.
+- Start every change from a fresh branch cut from the latest `main`.
+- Use a typed branch prefix that matches the work. Names are lowercase, kebab-case after the prefix, and describe the scope:
+  - `feature/<scope>` — new product capability or engine work. Examples: `feature/auth-identity-foundation`, `feature/game-engine-foundation`.
+  - `fix/<scope>` — bug fixes.
+  - `security/<scope>` — security, CI, or supply-chain hardening. Example: `security/ci-pr-hardening`.
+  - `chore/<scope>`, `docs/<scope>`, `refactor/<scope>` — supporting work.
+- Open a pull request for every branch and fill out the PR template completely: what changed, why, data classification (§9), security/privacy impact (§7), tests run with actual results (§8, §31), and app-store/compliance impact (§20).
+- A PR may merge only when all required checks pass — quality (format, lint, typecheck, tests), secret scan, dependency review (vulns + license deny-list), Semgrep SAST, CodeQL, OSV-Scanner, dependency audit, and SBOM — and a CODEOWNERS review is approved.
+- Never bypass, disable, downgrade, or force-merge past a required check, and never merge a PR that still needs the requested human review.
+- Keep PRs small and coherent. Split large engine work into milestone PRs per §2 and §30, each tied to launch-quality acceptance criteria.
+- Dependency-update PRs (Dependabot) follow the same protected flow and CI gates; they are reviewed, not auto-applied.
 
