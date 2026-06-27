@@ -141,6 +141,34 @@ describe('TEMPO API', () => {
     expect(list.json()).toHaveLength(2);
   });
 
+  it('rate-limits an authenticated protected route (429 after the threshold)', async () => {
+    // Drive the limit low so the threshold is reached deterministically.
+    const limited = await buildApp({
+      verifier: createFakeTokenVerifier(TOKENS),
+      users: new InMemoryUserRepository(),
+      consents: new InMemoryConsentRepository(),
+      dataExports: new InMemoryDataExportRepository(),
+      rateLimit: { max: 3, timeWindow: '1 minute' },
+    });
+
+    const statuses: number[] = [];
+    for (let i = 0; i < 4; i++) {
+      const res = await limited.inject({
+        method: 'GET',
+        url: '/v1/profile',
+        // Verified token, no provisioned user -> the handler runs and returns
+        // 404, proving the request passed auth and was NOT rate-limited yet.
+        headers: auth('token-b'),
+      });
+      statuses.push(res.statusCode);
+    }
+
+    // Authorized requests reach the handler (404) up to the limit...
+    expect(statuses.slice(0, 3)).toEqual([404, 404, 404]);
+    // ...then @fastify/rate-limit rejects the next one with 429.
+    expect(statuses[3]).toBe(429);
+  });
+
   it('requires explicit confirmation for account deletion, then removes data', async () => {
     await app.inject({
       method: 'POST',

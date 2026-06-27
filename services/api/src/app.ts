@@ -8,6 +8,7 @@ import {
   UserProfileUpdateSchema,
 } from '@tempo/contracts';
 import Fastify, {
+  type FastifyError,
   type FastifyInstance,
   type FastifyReply,
   type FastifyRequest,
@@ -33,6 +34,9 @@ export type AppDeps = {
   consents: ConsentRepository;
   dataExports: DataExportRepository;
   logger?: FastifyServerOptions['logger'];
+  /** Rate-limit policy applied globally and to the authenticated router.
+   * Defaults to 100 requests/minute; lowered in tests to assert 429s. */
+  rateLimit?: { max: number; timeWindow: number | string };
 };
 
 function bearerToken(header: string | undefined): string | null {
@@ -62,12 +66,22 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     dataExports: deps.dataExports,
   });
 
-  await app.register(helmet);
-  await app.register(rateLimit, { max: 100, timeWindow: '1 minute' });
+  const rateLimitOptions = deps.rateLimit ?? { max: 100, timeWindow: '1 minute' };
 
-  app.setErrorHandler((error, request, reply) => {
-    request.log.error({ err: error }, 'unhandled error');
-    if (!reply.sent) reply.code(500).send({ message: 'Internal server error' });
+  await app.register(helmet);
+  await app.register(rateLimit, rateLimitOptions);
+
+  app.setErrorHandler((error: FastifyError, request, reply) => {
+    const statusCode = typeof error.statusCode === 'number' ? error.statusCode : 500;
+    // Client errors (e.g. 429 from rate limiting, 400 from body limits) carry a
+    // safe status + message — surface them as-is. Server errors are logged and
+    // returned as a generic 500 so internals never leak (CLAUDE.md §14, §17).
+    if (statusCode >= 500) {
+      request.log.error({ err: error }, 'unhandled error');
+      if (!reply.sent) reply.code(500).send({ message: 'Internal server error' });
+      return;
+    }
+    if (!reply.sent) reply.code(statusCode).send({ message: error.message });
   });
 
   // Public liveness probe.
@@ -78,7 +92,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     // Rate-limit the authenticated router explicitly. The root limiter above
     // already applies to inherited hooks, but registering within this scope
     // keeps the limit local to the routes that perform authorization.
-    await protectedScope.register(rateLimit, { max: 100, timeWindow: '1 minute' });
+    await protectedScope.register(rateLimit, rateLimitOptions);
 
     protectedScope.addHook('preHandler', async (request, reply) => {
       const token = bearerToken(request.headers.authorization);
