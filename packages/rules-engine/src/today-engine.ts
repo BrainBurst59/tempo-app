@@ -61,7 +61,9 @@ export function generateTodayRecommendation(rawInput: TodaySignalInput): TodayRe
   if (input.sorenessStatus === 'pain_flag') {
     score -= 35;
     reasonCodes.push('pain_flag');
-    safetyWarnings.push('Pain was reported. TEMPO will avoid escalation and suggest lower-risk movement.');
+    safetyWarnings.push(
+      'Pain was reported. TEMPO will avoid escalation and suggest lower-risk movement.',
+    );
   }
 
   if (input.recentTrainingLoadScore > 80) {
@@ -95,7 +97,8 @@ export function generateTodayRecommendation(rawInput: TodaySignalInput): TodayRe
       primaryActionLabel: 'Start recovery plan',
       secondaryActionLabel: 'Adjust today',
       trainingMinutes: 0,
-      movementMinutes: input.weatherOpportunity === 'good_outdoor' ? Math.min(30, input.availableMinutes) : 15,
+      movementMinutes:
+        input.weatherOpportunity === 'good_outdoor' ? Math.min(30, input.availableMinutes) : 15,
       reasonCodes,
       coachExplanation:
         'Your signals point toward recovery. TEMPO is keeping today useful without pushing intensity.',

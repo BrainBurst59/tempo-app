@@ -1,0 +1,14 @@
+node_modules/
+.expo/
+dist/
+build/
+coverage/
+android/
+ios/
+pnpm-lock.yaml
+*.tsbuildinfo
+
+# Authoritative governance docs — kept verbatim, not reformatted.
+AGENTS.md
+CLAUDE.md
+PROJECT_INSTRUCTIONS.md

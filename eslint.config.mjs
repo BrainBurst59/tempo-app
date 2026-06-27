@@ -4,7 +4,7 @@ import prettier from 'eslint-config-prettier';
 
 export default [
   {
-    ignores: ['node_modules/**', 'dist/**', 'build/**', 'coverage/**', '.expo/**']
+    ignores: ['node_modules/**', 'dist/**', 'build/**', 'coverage/**', '.expo/**'],
   },
   {
     files: ['**/*.ts', '**/*.tsx'],
@@ -12,19 +12,19 @@ export default [
       parser: tsParser,
       parserOptions: {
         ecmaVersion: 'latest',
-        sourceType: 'module'
-      }
+        sourceType: 'module',
+      },
     },
     plugins: {
-      '@typescript-eslint': tseslint
+      '@typescript-eslint': tseslint,
     },
     rules: {
       ...tseslint.configs.recommended.rules,
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/no-floating-promises': 'off',
-      'no-console': ['warn', { allow: ['warn', 'error'] }]
-    }
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+    },
   },
-  prettier
+  prettier,
 ];

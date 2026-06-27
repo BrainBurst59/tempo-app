@@ -1,6 +1,6 @@
 import type { AvatarState } from '@tempo/contracts';
 import { StyleSheet, Text, View } from 'react-native';
-import { tempoColors, tempoRadius } from '../tokens';
+import { tempoColors } from '../tokens';
 
 type TempoAvatarProps = {
   state: AvatarState;
@@ -27,7 +27,7 @@ export function TempoAvatar({ state, size = 112 }: TempoAvatarProps) {
         },
       ]}
     >
-      <View style={[styles.inner, { borderRadius: size / 2 - 10 }]}> 
+      <View style={[styles.inner, { borderRadius: size / 2 - 10 }]}>
         <Text style={styles.mark}>{archetypeLabel[state.archetype]}</Text>
         <Text style={styles.state}>{state.tempoState.toUpperCase()}</Text>
       </View>

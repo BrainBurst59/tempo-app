@@ -4,12 +4,24 @@ import { TempoStateSchema } from './tempo-state';
 export const FuelStatusSchema = z.enum(['under_target', 'on_target', 'over_target', 'unknown']);
 export const RecoveryStatusSchema = z.enum(['low', 'steady', 'high', 'unknown']);
 export const SorenessStatusSchema = z.enum(['none', 'mild', 'heavy', 'pain_flag']);
-export const WeatherOpportunitySchema = z.enum(['good_outdoor', 'neutral', 'poor_outdoor', 'unknown']);
+export const WeatherOpportunitySchema = z.enum([
+  'good_outdoor',
+  'neutral',
+  'poor_outdoor',
+  'unknown',
+]);
 
 export const TodaySignalInputSchema = z.object({
   userId: z.string().min(1),
   localDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  goal: z.enum(['build_muscle', 'lose_fat', 'gain_strength', 'recomposition', 'endurance', 'general_fitness']),
+  goal: z.enum([
+    'build_muscle',
+    'lose_fat',
+    'gain_strength',
+    'recomposition',
+    'endurance',
+    'general_fitness',
+  ]),
   plannedTrainingMinutes: z.number().int().min(0).max(180),
   availableMinutes: z.number().int().min(0).max(240),
   fuelStatus: FuelStatusSchema,
