@@ -1,0 +1,42 @@
+# TEMPO Gitleaks configuration.
+#
+# Secret scanning is NOT weakened. We extend Gitleaks' full default ruleset
+# (useDefault = true), so every built-in rule runs across the entire repository
+# and git history.
+#
+# The single allowlist below clears exactly ONE historical false positive:
+#
+#   Rule:        generic-api-key
+#   File:        apps/mobile/src/env.test.ts (line 6)
+#   Commit:      5cd16155fddb8d5b8fe9a41a38ab1bbd3415ff79
+#   Value:       pk_test_abc123
+#   Fingerprint: 5cd16155fddb8d5b8fe9a41a38ab1bbd3415ff79:apps/mobile/src/env.test.ts:generic-api-key:6
+#
+# Why this is a false positive, not a real secret:
+#   - The value is a unit-test fixture asserting that `validateClientEnv`
+#     accepts a Clerk *publishable* key. Clerk publishable keys (pk_*) are
+#     PUBLIC client identifiers by design — they ship in the app bundle and are
+#     not credentials. The value is also fake (not a real Clerk key); the
+#     high-entropy `generic-api-key` rule matched it generically.
+#   - HEAD no longer contains a key-shaped fixture (it was renamed to
+#     `pk_test_fixture_only`), but the original literal is immutable in git
+#     history at the commit above, so the history scan would fail forever
+#     without this allowlist. We do not rewrite shared history.
+#
+# Narrowness: Gitleaks 8.24.3 does NOT enforce `condition = "AND"` on the global
+# `[allowlist]` table (verified locally: a wrong commit or wrong value still
+# suppressed under the OR default). Under OR, adding `paths`/`commits` would
+# BROADEN the allowlist — it would mute ANY finding in that file or commit,
+# which would weaken scanning. So we pin the single most specific condition that
+# does not weaken real-secret detection: an anchored match on the exact fake
+# fixture value. No real Clerk key equals `pk_test_abc123`, and publishable keys
+# are public regardless. This allowlists only that exact literal — nothing else.
+title = "TEMPO Gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Historical test-fixture false positive: exact fake Clerk publishable test key 'pk_test_abc123' in apps/mobile/src/env.test.ts (commit 5cd16155, fingerprint ...:generic-api-key:6). Public-by-design and not a real credential."
+regexTarget = "secret"
+regexes = ['''^pk_test_abc123$''']

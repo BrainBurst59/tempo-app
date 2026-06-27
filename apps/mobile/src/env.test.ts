@@ -3,8 +3,8 @@ import { ClientEnvError, validateClientEnv } from './env';
 
 describe('validateClientEnv', () => {
   it('accepts a valid Clerk publishable test key', () => {
-    const env = validateClientEnv({ EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: 'pk_test_abc123' });
-    expect(env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY).toBe('pk_test_abc123');
+    const env = validateClientEnv({ EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: 'pk_test_fixture_only' });
+    expect(env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY).toBe('pk_test_fixture_only');
   });
 
   it('rejects a missing key', () => {
@@ -13,7 +13,7 @@ describe('validateClientEnv', () => {
 
   it('rejects a malformed key (wrong prefix)', () => {
     expect(() =>
-      validateClientEnv({ EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: 'sk_test_secret' }),
+      validateClientEnv({ EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: 'invalid_server_secret_fixture' }),
     ).toThrow(ClientEnvError);
   });
 
