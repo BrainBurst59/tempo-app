@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { TempoStateSchema } from './tempo-state';
+import { FitnessGoalSchema } from './profile';
 
 export const FuelStatusSchema = z.enum(['under_target', 'on_target', 'over_target', 'unknown']);
 export const RecoveryStatusSchema = z.enum(['low', 'steady', 'high', 'unknown']);
@@ -14,14 +15,7 @@ export const WeatherOpportunitySchema = z.enum([
 export const TodaySignalInputSchema = z.object({
   userId: z.string().min(1),
   localDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  goal: z.enum([
-    'build_muscle',
-    'lose_fat',
-    'gain_strength',
-    'recomposition',
-    'endurance',
-    'general_fitness',
-  ]),
+  goal: FitnessGoalSchema,
   plannedTrainingMinutes: z.number().int().min(0).max(180),
   availableMinutes: z.number().int().min(0).max(240),
   fuelStatus: FuelStatusSchema,
