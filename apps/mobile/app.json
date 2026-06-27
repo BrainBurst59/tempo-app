@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "TEMPO",
+    "slug": "tempo",
+    "scheme": "tempo",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "experiments": {
+      "typedRoutes": true
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.lanniemardyn.tempo",
+      "infoPlist": {
+        "NSCameraUsageDescription": "TEMPO uses the camera only when you choose food photo estimates or form-check training cues.",
+        "NSPhotoLibraryUsageDescription": "TEMPO can use selected photos only when you choose to upload food or progress images.",
+        "NSLocationWhenInUseUsageDescription": "TEMPO uses location only when you start outdoor activity tracking or ask for local movement suggestions.",
+        "NSHealthShareUsageDescription": "TEMPO reads selected health and fitness signals to personalize training, recovery, movement, and progress insights.",
+        "NSHealthUpdateUsageDescription": "TEMPO may write workouts only when you choose to save activity back to Apple Health."
+      }
+    },
+    "android": {
+      "package": "com.lanniemardyn.tempo",
+      "permissions": [
+        "CAMERA",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
