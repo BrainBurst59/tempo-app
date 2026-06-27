@@ -1,0 +1,60 @@
+// TEMPO durable data model (Postgres via Prisma).
+//
+// This schema is the source of truth for the identity domain's persistence.
+// Production repositories are implemented against it; tests use in-memory
+// adapters. Sensitive Personal Data (profile, consent) cascades on user delete
+// so account deletion removes all associated data (CLAUDE.md §10, §18).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String              @id @default(cuid())
+  clerkUserId           String              @unique
+  email                 String?
+  displayName           String
+  biologicalSex         String?
+  birthDate             String?
+  heightCm              Float?
+  weightKg              Float?
+  primaryGoal           String
+  measurementSystem     String              @default("metric")
+  avatarArchetype       String?
+  onboardingCompletedAt DateTime?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  consents              ConsentRecord[]
+  dataExports           DataExportRequest[]
+}
+
+// Append-only consent log: revocation is a new row, never an update/delete.
+model ConsentRecord {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  purpose        String
+  decision       String
+  dataCategories String[]
+  policyVersion  String
+  source         String
+  decidedAt      DateTime @default(now())
+
+  @@index([userId, purpose])
+}
+
+model DataExportRequest {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status      String    @default("requested")
+  requestedAt DateTime  @default(now())
+  readyAt     DateTime?
+
+  @@index([userId])
+}
