@@ -35,7 +35,7 @@ below) **after the workflows have run once** so GitHub knows they exist.
 | `Secret scan`             | `.github/workflows/ci.yml`               | gitleaks                            |
 | `Dependency review`       | `.github/workflows/ci.yml`               | new-dep vulns (high) + license deny |
 | `Semgrep SAST`            | `.github/workflows/semgrep.yml`          | SAST (OSS rule packs)               |
-| `CodeQL analyze (JS/TS)`  | `.github/workflows/codeql.yml`           | semantic SAST → code scanning       |
+| `CodeQL`                  | GitHub default setup (repo setting)      | semantic SAST → code scanning       |
 | OSV-Scanner (PR scan)     | `.github/workflows/osv-scanner.yml`      | diff-aware dependency vulns         |
 | `pnpm audit (high+)`      | `.github/workflows/dependency-audit.yml` | advisory feed, blocks high/critical |
 | `Generate CycloneDX SBOM` | `.github/workflows/sbom.yml`             | SBOM artifact produced              |
@@ -43,6 +43,15 @@ below) **after the workflows have run once** so GitHub knows they exist.
 > The OSV-Scanner job runs through a reusable workflow, so its check context is
 > reported as `scan-pr / <inner job>`. Select the exact string from the PR's
 > checks list the first time it runs.
+
+> CodeQL runs via **GitHub default setup** (Settings → Code security → CodeQL
+> analysis), which covers `actions`, `javascript`, and `typescript` — the
+> `actions` pack is what flags unpinned third-party actions. Default setup and a
+> committed advanced `codeql.yml` workflow are **mutually exclusive** (an
+> advanced workflow fails with a "configuration error" while default setup is
+> on), so this repo intentionally ships **no** `codeql.yml` and the required
+> context is `CodeQL`. To switch to an advanced workflow instead, first disable
+> default setup, then add the workflow.
 
 ## Apply protection (GitHub Ruleset — recommended)
 
@@ -87,7 +96,7 @@ Where `main-ruleset.json` is:
           { "context": "Secret scan" },
           { "context": "Dependency review" },
           { "context": "Semgrep SAST" },
-          { "context": "CodeQL analyze (JS/TS)" },
+          { "context": "CodeQL" },
           { "context": "pnpm audit (high+)" },
           { "context": "Generate CycloneDX SBOM" }
         ]
@@ -121,7 +130,7 @@ gh api -X PUT repos/BrainBurst59/tempo-app/branches/main/protection \
       "Secret scan",
       "Dependency review",
       "Semgrep SAST",
-      "CodeQL analyze (JS/TS)",
+      "CodeQL",
       "pnpm audit (high+)",
       "Generate CycloneDX SBOM"
     ]
