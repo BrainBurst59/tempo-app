@@ -1,0 +1,25 @@
+# TEMPO Gitleaks configuration.
+#
+# Secret scanning is NOT weakened. We extend Gitleaks' full default ruleset
+# (useDefault = true), so every built-in rule runs across the entire repository
+# and its history.
+#
+# The allowlist below clears exactly ONE immutable HISTORICAL false positive: a
+# fake Clerk *publishable* test key (`pk_test_abc123`) used in a unit-test
+# fixture. Clerk publishable keys (pk_*) are public client identifiers shipped in
+# the app bundle by design — not credentials — and this value is fake. HEAD no
+# longer contains any key-shaped literal (the fixture is built from a prefix
+# constant), but the value is immutable in git history, so a full-history scan
+# would otherwise fail forever.
+#
+# Scope: this matches ONLY the single exact literal string `pk_test_abc123`. It
+# is NOT a pattern, does NOT allowlist `pk_*`/`sk_*` broadly, and does NOT
+# disable any rule.
+title = "TEMPO Gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Single fake Clerk publishable test fixture value (public-by-design, not a credential)."
+regexes = ['''pk_test_abc123''']
