@@ -1,0 +1,45 @@
+name: CodeQL
+
+# Static analysis (semantic) for the TypeScript/JavaScript in the monorepo.
+# The repository is public, so CodeQL results upload to GitHub code scanning at
+# no cost and surface as PR annotations + entries in the Security tab.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    # Weekly full scan so advisories published after a merge are still caught.
+    - cron: '27 3 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: CodeQL analyze (JS/TS)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript-typescript]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          language: ${{ matrix.language }}
+          # security-extended adds higher-signal security queries on top of the
+          # default suite. CodeQL infers the JS/TS build with no compile step.
+          queries: security-extended
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:${{ matrix.language }}'

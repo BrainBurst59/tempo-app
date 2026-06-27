@@ -51,8 +51,17 @@ jobs:
     name: Dependency review
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/dependency-review-action@v4
         with:
           fail-on-severity: high
+          # Block strong/network copyleft licenses that are incompatible with a
+          # closed-source commercial App Store / Play build. Only newly added
+          # dependencies in the PR diff are evaluated, so this never retroac-
+          # tively blocks the existing tree. Adjust deliberately via PR review.
+          deny-licenses: AGPL-1.0-only, AGPL-1.0-or-later, AGPL-3.0-only, AGPL-3.0-or-later, GPL-2.0-only, GPL-2.0-or-later, GPL-3.0-only, GPL-3.0-or-later
+          comment-summary-in-pr: on-failure
