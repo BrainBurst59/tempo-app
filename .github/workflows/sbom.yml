@@ -20,7 +20,7 @@ jobs:
     name: Generate CycloneDX SBOM
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Generate SBOM (CycloneDX JSON)
         uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
