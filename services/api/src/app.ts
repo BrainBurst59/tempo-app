@@ -74,7 +74,12 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
   app.get('/healthz', () => ({ status: 'ok' }));
 
   // Everything below requires a verified Clerk session.
-  await app.register((protectedScope, _opts, done) => {
+  await app.register(async (protectedScope) => {
+    // Rate-limit the authenticated router explicitly. The root limiter above
+    // already applies to inherited hooks, but registering within this scope
+    // keeps the limit local to the routes that perform authorization.
+    await protectedScope.register(rateLimit, { max: 100, timeWindow: '1 minute' });
+
     protectedScope.addHook('preHandler', async (request, reply) => {
       const token = bearerToken(request.headers.authorization);
       if (!token) return reply.code(401).send({ message: 'Authentication required' });
@@ -149,8 +154,6 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
         return mapDomainError(error, reply);
       }
     });
-
-    done();
   });
 
   return app;
