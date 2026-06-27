@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: read
-  security-events: write
 
 jobs:
   quality:
@@ -15,9 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Reads the pnpm version from package.json "packageManager"; do not also
+      # pass `version` here or the action errors with "multiple versions".
       - uses: pnpm/action-setup@v4
-        with:
-          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -28,14 +27,25 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
 
-  secrets:
+  secret-scan:
     name: Secret scan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: gitleaks/gitleaks-action@v2
+        with:
+          fetch-depth: 0
+      # Run the gitleaks CLI directly. The gitleaks-action derives a commit
+      # range `<first>^..<last>` which is invalid on a repo's first push
+      # (the root commit has no parent); the CLI's full-history scan avoids it.
+      - name: Run gitleaks secret scan
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_VERSION: 8.24.3
+        run: |
+          mkdir -p "$RUNNER_TEMP/gitleaks"
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            | tar -xz -C "$RUNNER_TEMP/gitleaks" gitleaks
+          "$RUNNER_TEMP/gitleaks/gitleaks" version
+          "$RUNNER_TEMP/gitleaks/gitleaks" detect --source . --redact --no-banner --exit-code 1
 
   dependency-review:
     name: Dependency review
