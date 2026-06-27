@@ -16,12 +16,12 @@ TEMPO is designed as a premium consumer fitness product with a distinct visual a
 
 Core principles:
 
-* Training should feel adaptive, not chaotic.
-* Progress should be earned through real consistency.
-* Fitness data should become useful guidance, not dashboard noise.
-* The avatar should grow with the user.
-* Recovery, fuel, movement, and training should work together.
-* AI should support clear coaching, not replace safety rules or deterministic logic.
+- Training should feel adaptive, not chaotic.
+- Progress should be earned through real consistency.
+- Fitness data should become useful guidance, not dashboard noise.
+- The avatar should grow with the user.
+- Recovery, fuel, movement, and training should work together.
+- AI should support clear coaching, not replace safety rules or deterministic logic.
 
 TEMPO is not a generic workout logger, calorie tracker, wearable dashboard, or habit app. It is a connected performance system built around daily execution and long-term progression.
 
@@ -111,19 +111,19 @@ TEMPO handles sensitive personal data, including fitness activity, food logs, he
 
 The product is built around:
 
-* Explicit consent
-* Data minimization
-* Purpose limitation
-* Account deletion
-* Data deletion
-* Data export
-* Secure storage
-* Encryption in transit and at rest
-* Authorization checks
-* Privacy-preserving analytics
-* No sensitive data in logs
-* No sale of health, fitness, food, or location data
-* No use of health data for advertising or unrelated profiling
+- Explicit consent
+- Data minimization
+- Purpose limitation
+- Account deletion
+- Data deletion
+- Data export
+- Secure storage
+- Encryption in transit and at rest
+- Authorization checks
+- Privacy-preserving analytics
+- No sensitive data in logs
+- No sale of health, fitness, food, or location data
+- No use of health data for advertising or unrelated profiling
 
 ## AI Safety
 
