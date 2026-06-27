@@ -1,6 +1,6 @@
 # TEMPO
 
-**Train with rhythm, not chaos.**
+**Train with rhythm.**
 
 TEMPO is an avatar-led fitness operating system for iOS, Android, Apple Watch, and supporting backend services. It connects training, nutrition, movement, recovery, wearables, progress tracking, and adaptive coaching into one daily command center.
 
