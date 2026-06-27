@@ -13,6 +13,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@clerk/clerk-expo": "^2.19.0",
     "@expo/vector-icons": "^15.0.0",
     "@tempo/contracts": "workspace:*",
     "@tempo/rules-engine": "workspace:*",
@@ -21,11 +22,14 @@
     "expo-constants": "~56.0.0",
     "expo-linking": "~56.0.0",
     "expo-router": "~56.2.0",
+    "expo-secure-store": "~56.0.0",
     "expo-status-bar": "~56.0.0",
     "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-native": "0.85.3",
     "react-native-safe-area-context": "~5.7.0",
-    "react-native-screens": "^4.0.0"
+    "react-native-screens": "^4.0.0",
+    "zod": "^3.24.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
