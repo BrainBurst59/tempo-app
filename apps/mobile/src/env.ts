@@ -13,6 +13,7 @@ const ClientEnvSchema = z.object({
     .string()
     .min(1, 'EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is required')
     .regex(/^pk_(test|live)_/, 'must be a Clerk publishable key (pk_test_… or pk_live_…)'),
+  EXPO_PUBLIC_API_BASE_URL: z.string().url().default('http://localhost:3000'),
 });
 export type ClientEnv = z.infer<typeof ClientEnvSchema>;
 
@@ -43,5 +44,6 @@ export function validateClientEnv(source: Record<string, string | undefined>): C
 export function readClientEnv(): ClientEnv {
   return validateClientEnv({
     EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL,
   });
 }

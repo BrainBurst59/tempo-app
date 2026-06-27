@@ -1,6 +1,7 @@
 import { generateTodayRecommendation } from '@tempo/rules-engine';
 import { TempoAvatar, TempoCard, TempoRing, tempoColors, tempoSpacing } from '@tempo/ui';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Link } from 'expo-router';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { sampleAvatarState, sampleTodaySignals } from '../domain/sample-today';
 
 const recommendation = generateTodayRecommendation(sampleTodaySignals);
@@ -14,7 +15,11 @@ export function TodayScreen() {
           <Text style={styles.eyebrow}>Today Command Center</Text>
           <Text style={styles.title}>Train with rhythm, not chaos.</Text>
         </View>
-        <TempoAvatar state={avatarState} size={96} />
+        <Link href="/account" asChild>
+          <Pressable accessibilityRole="button" accessibilityLabel="Account and settings">
+            <TempoAvatar state={avatarState} size={96} />
+          </Pressable>
+        </Link>
       </View>
 
       <TempoCard variant="glow" style={styles.heroCard}>
