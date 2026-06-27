@@ -3,7 +3,7 @@ import { EnvValidationError, loadEnv, parseAuthorizedParties } from './env';
 
 describe('loadEnv', () => {
   it('accepts a minimal valid env and applies defaults', () => {
-    const env = loadEnv({ CLERK_SECRET_KEY: 'sk_test_x' });
+    const env = loadEnv({ CLERK_SECRET_KEY: 'test-clerk-secret' });
     expect(env.NODE_ENV).toBe('development');
     expect(env.PORT).toBe(3000);
   });
