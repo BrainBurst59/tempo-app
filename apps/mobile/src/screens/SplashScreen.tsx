@@ -1,11 +1,11 @@
-import { tempoColors, tempoSpacing } from '@tempo/ui';
+import { brand, tempoColors, tempoSpacing } from '@tempo/ui';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
 /** Shown while Clerk restores the session from secure storage. */
 export function SplashScreen() {
   return (
     <View style={styles.screen}>
-      <Text style={styles.wordmark}>TEMPO</Text>
+      <Text style={styles.wordmark}>{brand.name}</Text>
       <Text style={styles.tagline}>Train with rhythm, not chaos.</Text>
       <ActivityIndicator color={tempoColors.electricCyan} style={styles.spinner} />
     </View>
