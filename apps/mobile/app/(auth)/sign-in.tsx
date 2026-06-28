@@ -1,5 +1,5 @@
 import { useSignIn } from '@clerk/clerk-expo';
-import { TempoButton, TempoTextField, tempoColors, tempoSpacing } from '@tempo/ui';
+import { brand, TempoButton, TempoTextField, tempoColors, tempoSpacing } from '@tempo/ui';
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -40,7 +40,7 @@ export default function SignInScreen() {
     >
       <ScrollView contentContainerStyle={styles.content} style={styles.screen}>
         <Text style={styles.eyebrow}>Welcome back</Text>
-        <Text style={styles.title}>Sign in to TEMPO</Text>
+        <Text style={styles.title}>Sign in to {brand.name}</Text>
 
         <View style={styles.form}>
           <TempoTextField
@@ -73,7 +73,7 @@ export default function SignInScreen() {
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>New to TEMPO?</Text>
+          <Text style={styles.footerText}>New to {brand.name}?</Text>
           <Link href="/(auth)/sign-up" style={styles.link}>
             Create an account
           </Link>

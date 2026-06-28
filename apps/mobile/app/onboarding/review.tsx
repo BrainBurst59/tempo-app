@@ -1,4 +1,4 @@
-import { TempoCard, tempoColors, tempoSpacing } from '@tempo/ui';
+import { brand, TempoCard, tempoColors, tempoSpacing } from '@tempo/ui';
 import { TempoButton } from '@tempo/ui';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useOnboarding } from '../../src/onboarding/context';
@@ -38,7 +38,7 @@ export default function OnboardingReviewStep() {
       ) : null}
 
       <TempoButton
-        label="Enter TEMPO"
+        label={`Enter ${brand.name}`}
         onPress={() => {
           void submit();
         }}
