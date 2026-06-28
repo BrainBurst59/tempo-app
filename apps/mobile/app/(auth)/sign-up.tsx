@@ -1,5 +1,5 @@
 import { useSignUp } from '@clerk/clerk-expo';
-import { TempoButton, TempoTextField, tempoColors, tempoSpacing } from '@tempo/ui';
+import { brand, TempoButton, TempoTextField, tempoColors, tempoSpacing } from '@tempo/ui';
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -56,7 +56,7 @@ export default function SignUpScreen() {
       <ScrollView contentContainerStyle={styles.content} style={styles.screen}>
         <Text style={styles.eyebrow}>{pendingVerification ? 'Verify email' : 'Get started'}</Text>
         <Text style={styles.title}>
-          {pendingVerification ? 'Enter your code' : 'Create your TEMPO account'}
+          {pendingVerification ? 'Enter your code' : `Create your ${brand.name} account`}
         </Text>
 
         {pendingVerification ? (

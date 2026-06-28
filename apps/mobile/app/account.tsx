@@ -1,5 +1,5 @@
 import { useAuth, useUser } from '@clerk/clerk-expo';
-import { TempoButton, TempoCard, tempoColors, tempoSpacing } from '@tempo/ui';
+import { brand, TempoButton, TempoCard, tempoColors, tempoSpacing } from '@tempo/ui';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -51,7 +51,7 @@ export default function AccountScreen() {
   function confirmDelete() {
     Alert.alert(
       'Delete account?',
-      'This permanently deletes your TEMPO account and all associated data. This cannot be undone.',
+      `This permanently deletes your ${brand.name} account and all associated data. This cannot be undone.`,
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -109,8 +109,8 @@ export default function AccountScreen() {
       </View>
 
       <Text style={styles.legal}>
-        Deleting your account removes your profile, consent records, and TEMPO data. Health data is
-        never sold or used for advertising.
+        Deleting your account removes your profile, consent records, and {brand.name} data. Health
+        data is never sold or used for advertising.
       </Text>
 
       <TempoButton label="Back" variant="ghost" onPress={() => router.back()} style={styles.back} />

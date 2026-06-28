@@ -1,5 +1,5 @@
 import type { ConsentPurpose } from '@tempo/contracts';
-import { TempoButton, tempoColors, tempoRadius, tempoSpacing } from '@tempo/ui';
+import { brand, TempoButton, tempoColors, tempoRadius, tempoSpacing } from '@tempo/ui';
 import { useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { useOnboarding } from '../../src/onboarding/context';
@@ -8,7 +8,7 @@ import { REQUIRED_CONSENT } from '../../src/onboarding/state';
 const CONSENT_COPY: Record<ConsentPurpose, { title: string; description: string }> = {
   account: {
     title: 'Account & core features',
-    description: 'Required to create your TEMPO account and deliver core coaching.',
+    description: `Required to create your ${brand.name} account and deliver core coaching.`,
   },
   health_personalization: {
     title: 'Health personalization',
@@ -36,8 +36,7 @@ const CONSENT_COPY: Record<ConsentPurpose, { title: string; description: string 
   },
   analytics_product: {
     title: 'Product analytics',
-    description:
-      'Share privacy-filtered usage to improve TEMPO. Never your health data, photos, or routes.',
+    description: `Share privacy-filtered usage to improve ${brand.name}. Never your health data, photos, or routes.`,
   },
 };
 
