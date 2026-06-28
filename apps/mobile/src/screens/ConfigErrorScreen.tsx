@@ -1,4 +1,4 @@
-import { TempoCard, tempoColors, tempoSpacing } from '@tempo/ui';
+import { brand, TempoCard, tempoColors, tempoSpacing } from '@tempo/ui';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 
 /**
@@ -10,7 +10,7 @@ export function ConfigErrorScreen({ message }: { message: string }) {
   return (
     <ScrollView contentContainerStyle={styles.content} style={styles.screen}>
       <Text style={styles.eyebrow}>Configuration</Text>
-      <Text style={styles.title}>TEMPO can’t start</Text>
+      <Text style={styles.title}>{brand.name} can’t start</Text>
       <TempoCard variant="light" style={styles.card}>
         <Text style={styles.body}>{message}</Text>
       </TempoCard>
