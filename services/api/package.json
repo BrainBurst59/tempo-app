@@ -16,7 +16,7 @@
   "dependencies": {
     "@clerk/backend": "^3.8.0",
     "@fastify/helmet": "^13.0.0",
-    "@fastify/rate-limit": "^11.0.0",
+    "@fastify/rate-limit": "^11.1.0",
     "@prisma/client": "^6.16.0",
     "@tempo/contracts": "workspace:*",
     "fastify": "^5.8.0",
