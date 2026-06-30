@@ -1,3 +1,3 @@
-import { TodayScreen } from '../../src/screens/TodayScreen';
+import { TodayCommandCenter } from '../../src/screens/TodayCommandCenter';
 
-export default TodayScreen;
+export default TodayCommandCenter;
