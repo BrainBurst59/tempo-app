@@ -2,6 +2,7 @@ import { ClerkProvider, useAuth, useUser } from '@clerk/clerk-expo';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { isOnboardingComplete } from '../src/auth/onboarding-complete';
 import { secureStoreTokenCache } from '../src/auth/token-cache';
 import { ClientEnvError, readClientEnv } from '../src/env';
@@ -55,8 +56,13 @@ export default function RootLayout() {
     return <ConfigErrorScreen message={env.error} />;
   }
 
+  // SecureStore isn't available on web; omit tokenCache there so Clerk falls
+  // back to its default cache. (exactOptionalPropertyTypes forbids passing an
+  // explicit `undefined` to the optional prop, so conditionally spread it.)
+  const platformProps = Platform.OS === 'web' ? {} : { tokenCache: secureStoreTokenCache };
+
   return (
-    <ClerkProvider publishableKey={env.key} tokenCache={secureStoreTokenCache}>
+    <ClerkProvider publishableKey={env.key} {...platformProps}>
       <StatusBar style="light" />
       <RootNavigationGate />
     </ClerkProvider>
